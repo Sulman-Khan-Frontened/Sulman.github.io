@@ -326,3 +326,261 @@ body.resize .helper{
     font-style: italic;
     color: cornflowerblue;
 }
+
+body.resize .content-wrapper{
+    width: 96%;
+}
+.content-wrapper{
+    width: 76%;
+    height: 100%;
+    background-color: var(--content-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.header{
+    width: 100%;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--header-bg-color);
+    position: relative;
+}
+.toggler{
+    position: absolute;
+    width: 20px;
+    height: 90%;
+    z-index: 5;
+    background-color:rgb(153, 153, 153);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+.toggler div{
+    width: 19px;
+    height: 20px;
+    position: absolute;
+    left: -50%;
+    border: 1px solid white;
+    transform: rotate(39deg);
+}
+
+.header li{
+    width: 120px;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+    background-color: var(--tab-bg-color);
+    margin-inline-start: 25px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.514);
+}
+.header li.active_header_li{
+    background-color: rgba(217, 217, 218, 0.301);
+    color: rgba(255, 255, 255, 1);
+}
+.header li svg{
+    height: 50%;
+    margin-right: 10px;
+}
+
+.header li:nth-child(2) svg{
+    fill: tomato;
+}
+.header li:nth-child(3) svg{
+    fill:steelblue !important;
+}
+.header li:last-child svg{
+    fill: gold;
+}
+
+.main-wrapper{
+    width: 100%;
+    height:95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-container {
+    width: 100%;
+    min-height: 100%;
+    padding: 10px;
+    background-color: rgb(41, 41, 41);
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.editor-container > div{
+    display: none;
+}
+.editor-container .input.active_file{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 90vh;
+    resize: none;
+    overflow-y: auto;
+    outline: none;
+    border: 1px solid #eee;
+    padding: 5px;
+    font-size: 20px;
+    overflow-y: hidden;
+    overflow-y: scroll;
+    background-color: #060808;
+}
+.editor-container .input.active_file pre{
+    width: 100vh;
+    height: 85vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
+.editor-container .input.active_file pre textarea{
+    width: 100% !important;
+    height: 100%!important;
+    padding: 2px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    font-size: 22px;
+    resize: none;
+    color: white;
+ line-height: 1.5; /* Adjust this value as needed */
+}
+.editor-container .input.active_file pre textarea::selection {
+    background: royalblue;/* Adjust as needed */
+color: black;
+}
+
+.linker {
+    position: relative;
+}
+
+[linker] {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    width: 150px;
+    min-height: fit-content;
+    background-color: #0f0f0f;
+    border: 1px solid white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 500;
+}
+
+.linker ul:nth-child(4) {
+    left: 50px;
+}
+
+.linker ul:nth-child(6) {
+    left: 100px;
+}
+
+.linker ul:nth-child(8) {
+    left: 170px;
+}
+.linker ul:nth-child(13) {
+    left: 370px;
+}
+
+[linker].active_list {
+    display: flex;
+}
+
+[linker] li {
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+}
+
+[linker] li:last-child {
+    border: none;
+}
+
+[linker] li:hover {
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    background-color: transparent;
+
+}
+
+
+.navbar {
+    background-color: var(--navbar-bg-color);
+    color: white;
+    width: 100%;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start
+}
+
+.links {
+    width: 500px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 10px
+}
+
+.links .icon img {
+    width: 20px;
+    margin-right: 40px
+}
+
+.link-container {
+    width: 85%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: red; */
+}
+
+.link-container>ul.linker {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* background-color: yellow; */
+}
+
+.link-container>ul.linker > li[links] {
+    cursor: default;
+    font-size: 14px
+}
+
+.link-container>ul.linker>li[links]:active,
+.link-container>ul.linker>li[links]:hover {
+    color: rgba(255, 255, 255, .9)
+}
+
+.navbar>p {
+    margin-inline-start: 150px
+}
+
+.navbar>p .small {
+    font-size: 14px
+}
