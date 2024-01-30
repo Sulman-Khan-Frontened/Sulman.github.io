@@ -1,0 +1,80 @@
+body.resize .content-wrapper{
+    width: 96%;
+}
+.content-wrapper{
+    width: 76%;
+    height: 100%;
+    background-color: var(--content-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.header{
+    width: 100%;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--header-bg-color);
+    position: relative;
+}
+.toggler{
+    position: absolute;
+    width: 20px;
+    height: 90%;
+    z-index: 5;
+    background-color:rgb(153, 153, 153);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+.toggler div{
+    width: 19px;
+    height: 20px;
+    position: absolute;
+    left: -50%;
+    border: 1px solid white;
+    transform: rotate(39deg);
+}
+
+.header li{
+    width: 120px;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+    background-color: var(--tab-bg-color);
+    margin-inline-start: 25px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.514);
+}
+.header li.active_header_li{
+    background-color: rgba(217, 217, 218, 0.301);
+    color: rgba(255, 255, 255, 1);
+}
+.header li svg{
+    height: 50%;
+    margin-right: 10px;
+}
+
+.header li:nth-child(2) svg{
+    fill: tomato;
+}
+.header li:nth-child(3) svg{
+    fill:steelblue !important;
+}
+.header li:last-child svg{
+    fill: gold;
+}
+
+.main-wrapper{
+    width: 100%;
+    height:95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

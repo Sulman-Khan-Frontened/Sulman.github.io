@@ -1,0 +1,56 @@
+.editor-container {
+    width: 100%;
+    min-height: 100%;
+    padding: 10px;
+    background-color: rgb(41, 41, 41);
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.editor-container > div{
+    display: none;
+}
+.editor-container .input.active_file{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 90vh;
+    resize: none;
+    overflow-y: auto;
+    outline: none;
+    border: 1px solid #eee;
+    padding: 5px;
+    font-size: 20px;
+    overflow-y: hidden;
+    overflow-y: scroll;
+    background-color: #060808;
+}
+.editor-container .input.active_file pre{
+    width: 100vh;
+    height: 85vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
+.editor-container .input.active_file pre textarea{
+    width: 100% !important;
+    height: 100%!important;
+    padding: 2px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    font-size: 22px;
+    resize: none;
+    color: white;
+ line-height: 1.5; /* Adjust this value as needed */
+}
+.editor-container .input.active_file pre textarea::selection {
+    background: royalblue;/* Adjust as needed */
+color: black;
+}

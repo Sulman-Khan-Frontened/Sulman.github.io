@@ -1,0 +1,59 @@
+.linker {
+    position: relative;
+}
+
+[linker] {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    width: 150px;
+    min-height: fit-content;
+    background-color: #0f0f0f;
+    border: 1px solid white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 500;
+}
+
+.linker ul:nth-child(4) {
+    left: 50px;
+}
+
+.linker ul:nth-child(6) {
+    left: 100px;
+}
+
+.linker ul:nth-child(8) {
+    left: 170px;
+}
+.linker ul:nth-child(13) {
+    left: 370px;
+}
+
+[linker].active_list {
+    display: flex;
+}
+
+[linker] li {
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+}
+
+[linker] li:last-child {
+    border: none;
+}
+
+[linker] li:hover {
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    background-color: transparent;
+
+}

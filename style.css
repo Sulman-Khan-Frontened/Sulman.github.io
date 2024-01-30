@@ -1,0 +1,110 @@
+@import url('css/_navbar.css');
+@import url('css/_bottom.css');
+@import url('css/_content.css');
+@import url('css/_editor.css');
+@import url('css/_links.css');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+ul,li{
+    list-style-type: none !important;
+}
+:root{
+    --navbar-bg-color: #3f3f3f;
+    --sidebar-bg-color: #202020;
+    --content-bg-color: #2f2f2f;
+    --header-bg-color: rgba(82, 82, 82, 0.308);
+    --tab-bg-color: rgba(82, 82, 82, 0.808);
+    --main-clr: #22a4f1;
+}
+.all-wrapper{
+    max-width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+[contentEditable] {
+    color: white;
+}
+.run{
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background-color: var(--main-clr);
+    bottom: 00px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: white;
+    transition: 0.2s linear;
+}
+.run > div {
+    width: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px !important;
+    cursor: pointer !important;
+}
+.run > div > label{
+    cursor: pointer !important;
+}
+.output-container{
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.output-container .Output{
+    width: 100%;
+    height: 100%;
+}
+.cross{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: rgb(219, 219, 219);
+    cursor: pointer;
+}
+
+.cross::before{
+    position: absolute;
+    content: "Close";
+    top: 50%;
+    color: black;
+    font-size: 15px;
+    height: 20px;
+    text-align: center;
+    border-radius: 5px;
+    left: -500%;
+    transform: translateY(-50%);
+    color: var(--main-clr);
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+    width: 60px;
+    transition: 0.3s linear;
+    overflow: hidden;
+}
+.cross:hover::before{
+    opacity: 1;
+}
