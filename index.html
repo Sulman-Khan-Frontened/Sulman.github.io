@@ -835,11 +835,28 @@ textarea::-webkit-scrollbar-thumb:active {
     height: 100%;
     background-color: red;
 }	    
+	    .red{
+display: none;}
+@media screen and (max-width: 874px) {
+  .red {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to right, #FF5F6D, #FFC371);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: "Arial";
+  }
+  .all-wrapper{
+display: none;}
+}
     </style>
     <title> Vscode</title>
 </head>
 
 <body class="body">
+	<div class="red"></div>
     <section class="all-wrapper">
         <div class="active_editor">
             <p class="dynamic">Please Upgrade to Pro</p>
