@@ -1,394 +1,1548 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	 <script src="https://cdn.tailwindcss.com"></script>
-	<title>Tail Blocks</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="new.js" defer></script>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+   
+    <style>
+	* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+ul,
+li {
+    list-style-type: none !important;
+}
+
+:root {
+    --navbar-bg-color: #3C3C3C;
+    --sidebar-bg-color: #333333;
+    --content-bg-color: #252526;
+    --header-bg-color: #252526;
+    --tab-bg-color: #373737;
+    --main-clr: #007ACC;
+    --scroll-track: #1E1E1E;
+    --scroll-in: #bcbcbc;
+    --scroll-shadow: #494949;
+}
+
+.all-wrapper {
+    max-width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+
+[contentEditable] {
+    color: white;
+}
+
+.run {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background-color: var(--main-clr);
+    bottom: 00px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: white;
+    transition: 0.2s linear;
+    padding-inline-end: 20px;
+}
+
+.run button:focus {
+    background-color: rgba(255, 255, 255, 0.322);
+}
+
+.run>button {
+    width: 65px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px !important;
+    cursor: pointer !important;
+    background-color: transparent;
+    color: white;
+    outline: none;
+    border: none;
+}
+
+.run>button>label {
+    cursor: pointer !important;
+}
+
+.output-container {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.output-container .Output {
+    width: 100%;
+    height: 100%;
+}
+
+.cross {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: rgb(219, 219, 219);
+    cursor: pointer;
+    opacity: 0;
+}
+
+.cross::before {
+    position: absolute;
+    content: "Press Esc To Close";
+    top: 50%;
+    color: black;
+    font-size: 11px;
+    height: 15px;
+    text-align: center;
+    border-radius: 5px;
+    left: -800%;
+    transform: translateY(-50%);
+    color: ghostwhite;
+    background-color: rgba(0, 0, 0, 0.686);
+    padding: 5px;
+    opacity: 0;
+    /* pointer-events: none; */
+    width: 100px;
+    transition: 0.3s linear;
+    overflow: hidden;
+}
+
+.cross:hover {
+    opacity: 1;
+}
+
+.cross:hover::before {
+    opacity: 1;
+}
+
+.bottom {
+    width: 100%;
+    height: 96%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar {
+    width: 4%;
+    height: 100%;
+    background-color: var(--sidebar-bg-color);
+}
+
+.sidebar>ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.sidebar>ul .shortcuts-wrapper {
+    width: 100%;
+    height: 40%
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper li {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper li svg,
+.settings-wrapper p svg {
+    height: 25px;
+    cursor: pointer;
+    fill: rgba(255, 255, 255, .486)
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper li.active-shortcut svg {
+    fill: white !important;
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper li:hover svg,
+.settings-wrapper p:hover svg {
+    fill: white
+}
+
+.sidebar>ul .shortcuts-wrapper .wrapper li:has(#bug) {
+    position: relative
+}
+
+#bug {
+    position: absolute;
+    height: 15px;
+    left: 14px;
+    bottom: 14%;
+    z-index: 10;
+    fill: rgb(165, 158, 158) !important;
+}
+
+.settings-wrapper {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+body.resize .helper {
+    width: 0;
+    overflow: hidden;
+    transition: 0.2s linear;
+}
+
+.helper {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: #252526;
+    transition: 00s linear;
+}
+
+.explorer {
+    position: relative;
+    width: 100%;
+    height: 30%;
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+.title-explorer {
+    position: absolute;
+    color: white;
+    top: -10%;
+    padding-left: 10px;
+    left: 0;
+}
+
+.explorer li {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 10px;
+    margin-block: 1px;
+    background-color: transparent;
+}
+
+.explorer li.active_editor_file {
+    background-color: #04395E !important;
+}
+
+.explorer li:hover {
+    background-color: #2A2D2E;
+}
+
+.explorer li p {
+    font-size: 12px;
+    color: white;
+}
+
+.explorer li svg {
+    height: 18px;
+    margin-right: 10px;
+}
+
+.explorer li:nth-child(2) svg {
+    fill: tomato;
+}
+
+.explorer li:nth-child(3) svg {
+    fill: steelblue;
+}
+
+.explorer li:last-child svg {
+    fill: gold;
+}
+
+[data-name-changer] {
+    position: relative;
+}
+
+.name-absolute {
+    opacity: 0;
+    position: absolute;
+    right: 10px;
+    text-transform: lowercase;
+    font-size: 12px;
+    background-color: white;
+    color: black;
+    padding: 2px;
+}
+
+.common:hover .name-absolute {
+    opacity: 1;
+}
+
+.helper>ul {
+    display: none;
+}
+
+.helper>ul.active_tab {
+    display: flex !important;
+}
+
+.debugrun {
+    margin-top: 50px;
+    width: 100%;
+    height: 50%;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.debugrun button {
+    width: 90%;
+    height: 50px;
+    cursor: pointer;
+    background-color: rgb(65, 161, 225);
+    color: white;
+    border: none;
+    outline: none;
+}
+
+.debugrun button:hover {
+    background-color: rgba(65, 161, 225, 0.897);
+}
+
+.debugrun button:focus {
+    outline: 1px solid;
+    outline-color: cornflowerblue;
+    outline-offset: 2px;
+    box-sizing: 0px 0px 2px cornflowerblue;
+}
+
+.search {
+    position: relative;
+    padding-top: 50px;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+}
+
+.search>p {
+    left: 10px;
+    position: absolute;
+    color: white;
+}
+
+.search input {
+    width: 90%;
+    height: 30px;
+    margin-top: 50px;
+    background-color: transparent;
+    outline: 2px solid;
+    color: white;
+    padding-inline-start: 5px;
+    font-size: 15px;
+    outline-color: cornflowerblue;
+    border: none;
+}
+
+.plugins {
+    height: 50%;
+    width: 100%;
+    margin-top: 50px;
+    padding-inline-start: 10px;
+    color: white;
+    font-style: italic;
+    color: cornflowerblue;
+}
+
+
+body.resize .content-wrapper {
+    width: 96%;
+}
+
+.content-wrapper {
+    width: 76%;
+    height: 100%;
+    background-color: var(--content-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--header-bg-color);
+    position: relative;
+}
+
+.toggler {
+    position: absolute;
+    width: 20px;
+    height: 90%;
+    z-index: 5;
+    background-color: var(--navbar-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow:
+        -1px -1px 1px rgba(138, 138, 138, 0.230),
+        1px 1px 1px rgba(138, 138, 138, 0.230);
+    cursor: pointer;
+}
+
+.toggler div {
+    width: 19px;
+    height: 20px;
+    position: absolute;
+    left: -50%;
+    border: 1px solid white;
+    transform: rotate(39deg);
+}
+
+.header li {
+    width: 120px;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+    background-color: var(--tab-bg-color);
+    margin-inline-start: 25px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.514);
+}
+
+.header li.active_header_li {
+    background-color: #1E1E1E;
+    color: rgba(255, 255, 255, 1);
+    box-shadow:
+        -1px -1px 1px rgba(138, 138, 138, 0.230),
+        1px 1px 1px rgba(138, 138, 138, 0.230);
+}
+
+.header li svg {
+    height: 50%;
+    margin-right: 10px;
+}
+
+.header li:nth-child(2) svg {
+    fill: tomato;
+}
+
+.header li:nth-child(3) svg {
+    fill: steelblue !important;
+}
+
+.header li:last-child svg {
+    fill: gold;
+}
+
+.main-wrapper {
+    width: 100%;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.editor-container {
+    width: 100%;
+    min-height: 100%;
+    padding: 10px;
+    background-color: rgb(41, 41, 41);
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-container>div {
+    display: none;
+}
+
+.editor-container .input.active_file {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 90vh;
+    resize: none;
+    outline: none;
+    padding: 5px;
+    font-size: 20px;
+    background: #2f2f2fe6;
+}
+
+.editor-container .input.active_file>pre>textarea {
+    overflow-y: scroll;
+}
+
+.editor-container .input.active_file pre {
+    width: 100%;
+    height: 85vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.editor-container .input.active_file pre textarea {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 2px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    font-size: 22px;
+    resize: none;
+    color: white;
+    line-height: 1.5;
+    /* Adjust this value as needed */
+}
+
+.editor-container .input.active_file pre textarea::selection {
+    background: #264F78;
+    /* Adjust as needed */
+    color: white;
+}
+
+textarea::-webkit-scrollbar {
+    background-color: var(--scroll-track);
+    width: 16px;
+    /* border-radius: 10px; */
+    box-shadow: 0px 0px 20px var(--scroll-shadow);
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: var(--main-clr);
+    /* box-shadow: inset 0px 0px 2px var(--scroll-in), */
+    /* inset 1px 1px 1px var(--scroll-in); */
+    /* border-radius: 10px; */
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.411);
+}
+
+textarea::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255, 255, 255, 0.811);
+}
+
+.linker {
+    position: relative;
+}
+
+[linker] {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    width: 150px;
+    min-height: fit-content;
+    background-color: #3C3C3C;
+    /* border: 1px solid white; */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 500;
+    border-radius: 8px;
+    box-shadow: -1px -1px 1px #ffffff1a,
+        1px -1px 1px #ffffff2c;
+    overflow: hidden;
+}
+
+.linker ul:nth-child(4) {
+    left: 50px;
+}
+
+.linker ul:nth-child(6) {
+    left: 100px;
+}
+
+.linker ul:nth-child(8) {
+    left: 170px;
+}
+
+.linker ul:nth-child(13) {
+    left: 370px;
+}
+
+.linker ul:nth-child(11) {
+    left: 270px;
+}
+
+.linker ul:nth-child(14) {
+    left: 380px;
+}
+
+[linker].active_list {
+    display: flex;
+}
+
+[linker] li {
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border-bottom: 1px solid #aaaaaa;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 5px;
+    font-size: 12px !important;
+}
+
+[linker] li:last-child {
+    border: none;
+}
+
+[linker] li:hover {
+    color: white;
+    cursor: pointer;
+    background-color: #04395E;
+}
+
+[linker] li.disable {
+    color: rgb(165, 158, 158) !important;
+}
+
+
+.navbar {
+    background-color: var(--navbar-bg-color);
+    color: white;
+    width: 100%;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start
+}
+
+.links {
+    width: 500px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 10px
+}
+
+.links .icon img {
+    width: 20px;
+    margin-right: 40px
+}
+
+.link-container {
+    width: 85%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: red; */
+}
+
+.link-container>ul.linker {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* background-color: yellow; */
+}
+
+.link-container>ul.linker>li[links] {
+    cursor: default;
+    font-size: 14px
+}
+
+.link-container>ul.linker>li[links]:active,
+.link-container>ul.linker>li[links]:hover {
+    color: rgba(255, 255, 255, .9)
+}
+
+.navbar>p {
+    margin-inline-start: 150px
+}
+
+.navbar>p .small {
+    font-size: 14px
+}
+
+.layout {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(77, 77, 77, 0.322);
+    display: flex;
+    opacity: 0;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s linear;
+}
+
+.version {
+    position: relative;
+    width: 380px;
+    height: 250px;
+    background-color: transparent;
+    border: solid 1px var(--main-clr);
+    padding: 5px;
+    padding-top: 35px;
+}
+
+.cancel {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    border: 1px solid var(--scroll-in);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+}
+
+.version_type_content {
+    color: rgb(255, 174, 0);
+    background-color: rgba(0, 0, 0, 0.39);
+    padding: 5px;
+    border-radius: 8px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sht {
+    background: url('./banner.jpg') no-repeat center center;
+}
+
+.active_editor {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    width: 26%;
+    height: 120px;
+    transform: translateX(-50%);
+    background-color: white;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: 0.3s linear;
+}
+
+.active_editor>* {
+    width: 100%;
+    height: 50%;
+}
+
+.active_editor>*:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-inline-end: 20px;
+}
+
+.active_editor>p {
+    padding-inline-start: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.active_editor>*:nth-child(2)>button {
+    background-color: var(--main-clr);
+    width: 60px;
+    height: 30px;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.settings_c {
+    width: 100%;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.settings_c>spa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+}
+
+.key {
+    width: 30%;
+    height: 100%;
+    background-color: red;
+}	    
+    </style>
+    <title> Vscode</title>
+</head>
+
+<body class="body">
+    <section class="all-wrapper">
+        <div class="active_editor">
+            <p class="dynamic">Please Upgrade to Pro</p>
+            <div ok>
+                <button>Ok</button>
+            </div>
+        </div>
+
+        <nav class="navbar">
+            <ul class="links">
+                <li class="icon"><img src="./favicon.ico" alt=""></li>
+                <li class="link-container">
+                    <ul class="linker">
+                        <li links>
+                            File
+                        </li>
+                        <ul linker>
+                            <li getFile title="Open File From Computer">Open File</li>
+                            <li setFile title="Download Code In Seperated Files">Download File</li>
+                            <li save title="Save in Local Storage">Save </li>
+                            <li exitEditor title="Close Editor">Exit</li>
+                            <li title="Close Current Menu">Close Menu</li>
+                        </ul>
+                        <li links>
+                            Edit
+                        </li>
+                        <ul linker>
+                            <li>Undo</li>
+                            <li>Redo</li>
+                            <li>Cut</li>
+                            <li>Copy</li>
+                            <li>Close Menu</li>
+                        </ul>
+                        <li links>
+                            Selection
+                        </li>
+                        <ul linker>
+                            <li allSelect>Select All</li>
+                            <li allUnselect>Unselect All</li>
+                            <li>Close Menu</li>
+                        </ul>
+                        <li links>
+                            View
+                        </li>
+                        <ul linker>
+                            <li increaseFont>Increase Font Size</li>
+                            <li decreaseFont>Decrease Font Size</li>
+                            <li>Close Menu</li>
+                        </ul>
+                        <li links class="disable">
+                            <!-- <ul linker></ul> -->
+                            Go
+                        </li>
+                        <li links>
+                            Run
+                        </li>
+                        <ul linker>
+                            <li run>Run</li>
+                            <li class="disable">Run & Debug</li>
+                            <li>Close Menu</li>
+                        </ul>
+                        <li links class="disable">
+                            <!-- <ul linker></ul> -->
+                            Terminal
+                        </li>
+                        <li links>
+                            Help
+                        </li>
+                        <ul linker>
+                            <li layout=".version_type">Version</li>
+                            <li>Upgrade To Pro</li>
+                            <li doc="./docs.html">Docs</li>
+                            <li layout=".keyboard">Shortcuts</li>
+                            <li>Invite via Link</li>
+                            <li>Follow Us</li>
+                            <li>Close Menu</li>
+                        </ul>
+                    </ul>
+                </li>
+            </ul>
+            <p class="fileName"><span class="small title_bar_dynamic">index.html </span>- Visual Studio Code </p>
+        </nav>
+        <ul class="bottom">
+            <div class="sidebar">
+                <ul class="main-wraperr">
+                    <li class="shortcuts-wrapper">
+                        <ul class="wrapper">
+                            <li data-sidebar=".explorer" title="File Explorer" class="active-shortcut"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                    <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                    <path
+                                        d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z" />
+                                </svg></li>
+                            <li data-sidebar=".debugrun" title="Debug and Run"> <svg xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 448 512">
+                                    <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                    <path
+                                        d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" />
+                                </svg> <svg id="bug" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                    <path
+                                        d="M511.988 288.9c-.478 17.43-15.217 31.1-32.653 31.1H424v16c0 21.864-4.882 42.584-13.6 61.145l60.228 60.228c12.496 12.497 12.496 32.758 0 45.255-12.498 12.497-32.759 12.496-45.256 0l-54.736-54.736C345.886 467.965 314.351 480 280 480V236c0-6.627-5.373-12-12-12h-24c-6.627 0-12 5.373-12 12v244c-34.351 0-65.886-12.035-90.636-32.108l-54.736 54.736c-12.498 12.497-32.759 12.496-45.256 0-12.496-12.497-12.496-32.758 0-45.255l60.228-60.228C92.882 378.584 88 357.864 88 336v-16H32.666C15.23 320 .491 306.33.013 288.9-.484 270.816 14.028 256 32 256h56v-58.745l-46.628-46.628c-12.496-12.497-12.496-32.758 0-45.255 12.498-12.497 32.758-12.497 45.256 0L141.255 160h229.489l54.627-54.627c12.498-12.497 32.758-12.497 45.256 0 12.496 12.497 12.496 32.758 0 45.255L424 197.255V256h56c17.972 0 32.484 14.816 31.988 32.9zM257 0c-61.856 0-112 50.144-112 112h224C369 50.144 318.856 0 257 0z" />
+                                </svg></li>
+                            <li data-sidebar=".search" title="Search Through Project"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                    <path
+                                        d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" />
+                                </svg></li>
+                            <li data-sidebar=".plugins" title="Plugins"> <svg xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512">
+                                    <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                    <path
+                                        d="M239.1 6.3l-208 78c-18.7 7-31.1 25-31.1 45v225.1c0 18.2 10.3 34.8 26.5 42.9l208 104c13.5 6.8 29.4 6.8 42.9 0l208-104c16.3-8.1 26.5-24.8 26.5-42.9V129.3c0-20-12.4-37.9-31.1-44.9l-208-78C262 2.2 250 2.2 239.1 6.3zM256 68.4l192 72v1.1l-192 78-192-78v-1.1l192-72zm32 356V275.5l160-65v133.9l-160 80z" />
+                                </svg></li>
+                        </ul>
+                    </li>
+                    <li class="settings-wrapper">
+                        <p title="Account"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                                <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                <path
+                                    d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z" />
+                            </svg></p>
+                        <p title="Editor Settings" layout=".settings"> <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512">
+                                <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+                                <path
+                                    d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z" />
+                            </svg></p>
+                    </li>
+                </ul>
+            </div>
+            <div class="helper">
+                <ul class="explorer active_tab">
+                    <div class="title-explorer">
+                        Explorer
+                    </div>
+                    <li data-change-name update=".html-file" addTo=".header_html" class="html common active_editor_file"
+                        sendto=".nameforhtml">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z" />
+                        </svg>
+                        <p class="namer">HTML.html <span class="name-absolute">HTML</span> </p>
+                    </li>
+                    <li data-change-name update=".css-file" addTo=".header_css" class="css common" sendto=".nameforcss">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32l34.9 395.8L192 480l157.1-52.2L384 32H0zm313.1 80l-4.8 47.3L193 208.6l-.3.1h111.5l-12.8 146.6-98.2 28.7-98.8-29.2-6.4-73.9h48.9l3.2 38.3 52.6 13.3 54.7-15.4 3.7-61.6-166.3-.5v-.1l-.2.1-3.6-46.3L193.1 162l6.5-2.7H76.7L70.9 112h242.2z" />
+                        </svg>
+                        <p class="namer">Style.css <span class="name-absolute">CSS</span> </p>
+                    </li>
+                    <li data-change-name update=".js-file" addTo=".header_js" class="js common" sendto=".nameforjs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32v448h448V32H0zm243.8 349.4c0 43.6-25.6 63.5-62.9 63.5-33.7 0-53.2-17.4-63.2-38.5l34.3-20.7c6.6 11.7 12.6 21.6 27.1 21.6 13.8 0 22.6-5.4 22.6-26.5V237.7h42.1v143.7zm99.6 63.5c-39.1 0-64.4-18.6-76.7-43l34.3-19.8c9 14.7 20.8 25.6 41.5 25.6 17.4 0 28.6-8.7 28.6-20.8 0-14.4-11.4-19.5-30.7-28l-10.5-4.5c-30.4-12.9-50.5-29.2-50.5-63.5 0-31.6 24.1-55.6 61.6-55.6 26.8 0 46 9.3 59.8 33.7L368 290c-7.2-12.9-15-18-27.1-18-12.3 0-20.1 7.8-20.1 18 0 12.6 7.8 17.7 25.9 25.6l10.5 4.5c35.8 15.3 55.9 31 55.9 66.2 0 37.8-29.8 58.6-69.7 58.6z" />
+                        </svg>
+                        <p class="namer">Script.js <span class="name-absolute">JS</span> </p>
+                    </li>
+                </ul>
+                <ul class="debugrun">
+                    <button>Debug and Run</button>
+                </ul>
+                <ul class="search">
+                    <p>SEARCH</p>
+                    <input type="text" name="" id="search_input">
+                </ul>
+                <ul class="plugins">
+                    Plugins Comming Soon!
+                </ul>
+            </div>
+            <div class="content-wrapper">
+                <ul class="header">
+                    <div class="toggler" title="Click to Toggle Side Bar">
+                        <div></div>
+                    </div>
+                    <li data-file=".html-file" data-activateUi=".html" class="header_html active_header_li">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z" />
+                        </svg>
+                        <p class="nameforhtml">HTML.html</p>
+                    </li>
+                    <li data-file=".css-file" data-activateUi=".css" class="header_css">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32l34.9 395.8L192 480l157.1-52.2L384 32H0zm313.1 80l-4.8 47.3L193 208.6l-.3.1h111.5l-12.8 146.6-98.2 28.7-98.8-29.2-6.4-73.9h48.9l3.2 38.3 52.6 13.3 54.7-15.4 3.7-61.6-166.3-.5v-.1l-.2.1-3.6-46.3L193.1 162l6.5-2.7H76.7L70.9 112h242.2z" />
+                        </svg>
+                        <p class="nameforcss">Style.css</p>
+                    </li>
+                    <li data-file=".js-file" data-activateUi=".js" class="header_js">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                            <path
+                                d="M0 32v448h448V32H0zm243.8 349.4c0 43.6-25.6 63.5-62.9 63.5-33.7 0-53.2-17.4-63.2-38.5l34.3-20.7c6.6 11.7 12.6 21.6 27.1 21.6 13.8 0 22.6-5.4 22.6-26.5V237.7h42.1v143.7zm99.6 63.5c-39.1 0-64.4-18.6-76.7-43l34.3-19.8c9 14.7 20.8 25.6 41.5 25.6 17.4 0 28.6-8.7 28.6-20.8 0-14.4-11.4-19.5-30.7-28l-10.5-4.5c-30.4-12.9-50.5-29.2-50.5-63.5 0-31.6 24.1-55.6 61.6-55.6 26.8 0 46 9.3 59.8 33.7L368 290c-7.2-12.9-15-18-27.1-18-12.3 0-20.1 7.8-20.1 18 0 12.6 7.8 17.7 25.9 25.6l10.5 4.5c35.8 15.3 55.9 31 55.9 66.2 0 37.8-29.8 58.6-69.7 58.6z" />
+                        </svg>
+                        <p class="nameforjs"> Script.js</p>
+                    </li>
+                </ul>
+                <div class="main-wrapper">
+                    <div class="editor-container">
+                        <!-- HTML Editor -->
+                        <div class="input html-file active_file">
+                            <pre>
+                                <textarea type="text"  id="htmlCode" class="language-html html" ></textarea>
+                            </pre>
+                        </div>
+
+                        <!-- CSS Editor -->
+                        <div class="input css-file">
+                            <pre>
+                                <textarea type="text"  id="cssCode" class="language-css css" ></textarea>
+                            </pre>
+                        </div>
+
+                        <!-- JavaScript Editor -->
+                        <div class="input js-file">
+                            <pre>
+                                <textarea type="text"   id="jsCode" class="language-js javascript" ></textarea>
+				<div id="editor"></div>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ul>
+        <div class="run" focusable="true">
+            <button class="button-run">
+                <label for="">Run Code: </label>&#9654;
+            </button>
+        </div>
+        <div class="output-container">
+            <iframe frameborder="0" class="Output"></iframe>
+            <div class="cross">
+                &times;
+            </div>
+        </div>
+
+
+
+        <section class="version_type layout">
+            <div class="version">
+                <div class="cancel">
+                    &times;
+                </div>
+                <div class="version_type_content">
+                    <p>Version: 1.0.0 (user setup)</p>
+                    <p>Licence: Free</p>
+                    <p>Purchase: no yet</p>
+                    <p>Type: Simple</p>
+                    <p>Envirnoment: Web</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="keyboard layout">
+            <div class="version">
+                <div class="cancel">
+                    &times;
+                </div>
+                <div class="version_type_content sht">
+
+                </div>
+            </div>
+        </section>
+
+        <section class="layout settings">
+            <div class="cancel">
+                &times;
+            </div>
+            <div class="settings_c">
+                <span>
+                    <div class="key">
+                        <p>Save On: </p>
+                    </div>
+                </span>
+            </div>
+        </section>
+
+
+    </section>
+
+
+
+
+    <script>
+	    const FilesName = document.querySelectorAll("[data-change-name]");
+var shortcuts = document.querySelectorAll(".wrapper li");
+shortcuts.forEach(active => {
+    active.addEventListener("click", e => {
+        let target = document.querySelector(e.currentTarget.dataset.sidebar);
+        if (document.body.classList.contains("resize")) {
+            document.body.classList.remove("resize")
+        }
+        shortcuts.forEach(remove => remove.classList.remove("active-shortcut"));
+        let tabs = document.querySelectorAll(".helper ul");
+        tabs.forEach(tab => tab.classList.remove("active_tab"))
+        target.classList.add("active_tab");
+        e.currentTarget.classList.add("active-shortcut")
+    });
+});
+
+document.querySelector(".small").addEventListener("mouseenter", () => document.querySelector(".small").setAttribute("title", document.querySelector(".small").textContent))
+
+
+
+
+FilesName.forEach(name => {
+    name.removeAttribute("title");
+    name.addEventListener("mouseenter", e => {
+        e.currentTarget.setAttribute("title", e.currentTarget.querySelector("p").textContent + "- Double Click to Change Name")
+    })
+});
+
+
+let Explorer = document.querySelectorAll(".explorer li");
+let Uiactive = document.querySelectorAll(".header li");
+let Files = document.querySelectorAll(".input");
+Uiactive.forEach(ui => {
+    ui.addEventListener("click", e => {
+        const target = document.querySelector(e.currentTarget.dataset.activateui);
+        const targetFile = document.querySelector(e.currentTarget.dataset.file);
+
+        Files.forEach(e => e.classList.remove("active_file"))
+        Uiactive.forEach(remove => remove.classList.remove("active_header_li"));
+        Explorer.forEach(remove => remove.classList.remove("active_editor_file"));
+
+        document.querySelector("title").innerText = e.currentTarget.innerText + "  |   Vscode";
+        
+        targetFile.classList.add("active_file")
+        target.classList.add("active_editor_file");
+        e.currentTarget.classList.add("active_header_li")
+    })
+});
+
+Explorer.forEach(e => {
+
+    e.addEventListener("click", main => {
+
+        let getTarget = document.querySelector(main.currentTarget.getAttribute("addTo"));
+        let getTargetedFile = document.querySelector(main.currentTarget.getAttribute("update"));
+
+        Uiactive.forEach(e => e.classList.remove("active_header_li"));
+        Explorer.forEach(remove => remove.classList.remove("active_editor_file"));
+        Files.forEach(e => e.classList.remove("active_file"))
+        
+        document.querySelector("title").innerText = main.currentTarget.innerText + "  |   Vscode";
+        getTargetedFile.classList.add("active_file")
+        main.currentTarget.classList.add("active_editor_file");
+        getTarget.classList.add("active_header_li");
+
+
+
+    })
+}
+);
+const FilesNames = document.querySelectorAll("[data-change-name] > p")
+FilesNames.forEach(files => {
+    files.addEventListener("dblclick", e => {
+        var newName = prompt("Enter File Name", "");
+        let span = e.currentTarget.querySelector("span").innerText;
+        let sendto = document.querySelector(e.currentTarget.getAttribute("sendto"));
+
+
+        if (newName != "" || newName != false) {
+            e.currentTarget.querySelector("p").innerText = newName + "." + span;
+            sendto.innerText = newName + "." + span;
+        } else {
+            alert("Please Enter a Valid Name");
+        }
+
+
+    });
+});
+
+var Toggler = document.querySelector(".toggler");
+document.body.classList.add("resize");
+Toggler.addEventListener("click", () => {
+    document.body.classList.toggle("resize");
+})
+
+
+
+
+
+var Links = document.querySelectorAll("[links]");
+let a = document.querySelectorAll("[linker]");
+var linker;
+Links.forEach(Link => {
+    if (Link.currentTarget == Link.target) {
+        Link.addEventListener("click", e => {
+            let Linke = document.querySelectorAll("[linker]").forEach(e => e.classList.remove("active_list"))
+            let linker = Link.nextElementSibling;
+            linker.classList.add("active_list")
+
+
+        })
+    }
+});
+
+a.forEach(e => {
+    e.addEventListener("click", () => {
+        let Element = e;
+        if (Element.classList.contains("active_list")) {
+            Element.classList.remove("active_list")
+        }
+    })
+})
+
+
+var Exit = document.querySelector("[exitEditor]");
+Exit.addEventListener("click", () => {
+    window.close()
+
+})
+
+
+var OpenFile = document.querySelector("[getFile]");
+
+OpenFile.addEventListener("click", () => {
+    var CreatedElement = document.createElement("input");
+    CreatedElement.type = "file";
+    CreatedElement.style = "width: 0px; height: 0px;";
+    CreatedElement.accept = ".html,.css,.js"; // Allow HTML, CSS, and JavaScript files
+
+    CreatedElement.addEventListener("change", function () {
+        let files = CreatedElement.files;
+        let file = files[0];
+
+        if (file) {
+            if (isValidFileExtension(file)) {
+                console.log("Selected file name: " + file.name);
+                console.log("Selected file size: " + file.size + " bytes");
+
+                // Read the content of the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+
+                    // Get the code element
+                    const htmlElement = document.getElementById("htmlCode");
+                    const cssElement = document.getElementById("cssCode");
+                    const jsElement = document.getElementById("jsCode");
+
+                    // Set the content based on file type
+                    if (file.name.toLowerCase().endsWith(".html")) {
+                        htmlElement.innerText = fileContent;
+                    } else if (file.name.toLowerCase().endsWith(".css")) {
+                        cssElement.innerText = fileContent;
+                    } else if (file.name.toLowerCase().endsWith(".js")) {
+                        jsElement.innerText = fileContent;
+                    } else {
+                        console.log("Unsupported file type");
+                    }
+
+                };
+
+                // Read the file as text
+                reader.readAsText(file);
+            } else {
+                console.log("Invalid file type. Please select an HTML, CSS, or JavaScript file.");
+            }
+        } else {
+            console.log("No file selected");
+        }
+    });
+
+    CreatedElement.click();
+});
+
+function isValidFileExtension(file) {
+    // Check if the file has a valid extension
+    const allowedExtensions = ['.html', '.css', '.js'];
+    return allowedExtensions.some(extension => file.name.toLowerCase().endsWith(extension));
+}
+
+
+var Run = document.querySelector(".run > button");
+var Close = document.querySelector(".cross");
+var output = document.querySelector(".Output");
+var HTMLCode = document.querySelector("#htmlCode");
+var cssCode = document.querySelector("#cssCode");
+var jsCode = document.querySelector("#jsCode");
+var output_container = document.querySelector(".output-container");
+
+
+HTMLCode.value = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-			<!-- Header -->
-			<header class="text-gray-400 bg-gray-900 body-font">
-		  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-		    <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
-		      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-yellow-500 rounded-full" viewBox="0 0 24 24">
-		        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-		      </svg>
-		      <span class="ml-3 text-xl">Tailblocks</span>
-		    </a>
-		    <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-		      <a class="mr-5 hover:text-white">First Link</a>
-		      <a class="mr-5 hover:text-white">Second Link</a>
-		      <a class="mr-5 hover:text-white">Third Link</a>
-		      <a class="mr-5 hover:text-white">Fourth Link</a>
-		    </nav>
-		    <button class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">Button
-		      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-		        <path d="M5 12h14M12 5l7 7-7 7"></path>
-		      </svg>
-		    </button>
-		  </div>
-		</header>
-			<!-- Hero Section -->
-			<section class="text-gray-400 bg-gray-900 body-font">
-		  <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
-		    <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-		      <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">Before they sold out
-		        <br class="hidden lg:inline-block">readymade gluten
-		      </h1>
-		      <p class="mb-8 leading-relaxed">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
-		      <div class="flex justify-center">
-		        <button class="inline-flex text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded text-lg">Button</button>
-		        <button class="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg">Button</button>
-		      </div>
-		    </div>
-		    <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-		      <img class="object-cover object-center rounded" alt="hero" src="https://dummyimage.com/720x600">
-		    </div>
-		  </div>
-		</section>
-		<!-- Gallery -->
-		<section class="text-gray-400 bg-gray-900 body-font">
-		  <div class="container px-5 py-24 mx-auto flex flex-wrap">
-		    <div class="lg:w-2/3 mx-auto">
-		      <div class="flex flex-wrap w-full bg-gray-800 py-32 px-10 relative mb-4">
-		        <img alt="gallery" class="w-full object-cover h-full object-center block opacity-25 absolute inset-0" src="https://dummyimage.com/820x340">
-		        <div class="text-center relative z-10 w-full">
-		          <h2 class="text-2xl text-white font-medium title-font mb-2">Shooting Stars</h2>
-		          <p class="leading-relaxed">Skateboard +1 mustache fixie paleo lumbersexual.</p>
-		          <a class="mt-3 text-yellow-300 inline-flex items-center">Learn More
-		            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-		              <path d="M5 12h14M12 5l7 7-7 7"></path>
-		            </svg>
-		          </a>
-		        </div>
-		      </div>
-		      <div class="flex flex-wrap -mx-2">
-		        <div class="px-2 w-1/2">
-		          <div class="flex flex-wrap w-full bg-gray-800 sm:py-24 py-16 sm:px-10 px-6 relative">
-		            <img alt="gallery" class="w-full object-cover h-full object-center block opacity-25 absolute inset-0" src="https://dummyimage.com/542x460">
-		            <div class="text-center relative z-10 w-full">
-		              <h2 class="text-xl text-white font-medium title-font mb-2">Shooting Stars</h2>
-		              <p class="leading-relaxed">Skateboard +1 mustache fixie paleo lumbersexual.</p>
-		              <a class="mt-3 text-yellow-300 inline-flex items-center">Learn More
-		                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-		                  <path d="M5 12h14M12 5l7 7-7 7"></path>
-		                </svg>
-		              </a>
-		            </div>
-		          </div>
-		        </div>
-		        <div class="px-2 w-1/2">
-		          <div class="flex flex-wrap w-full bg-gray-800 sm:py-24 py-16 sm:px-10 px-6 relative">
-		            <img alt="gallery" class="w-full object-cover h-full object-center block opacity-25 absolute inset-0" src="https://dummyimage.com/542x420">
-		            <div class="text-center relative z-10 w-full">
-		              <h2 class="text-xl text-white font-medium title-font mb-2">Shooting Stars</h2>
-		              <p class="leading-relaxed">Skateboard +1 mustache fixie paleo lumbersexual.</p>
-		              <a class="mt-3 text-yellow-300 inline-flex items-center">Learn More
-		                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-		                  <path d="M5 12h14M12 5l7 7-7 7"></path>
-		                </svg>
-		              </a>
-		            </div>
-		          </div>
-		        </div>
-		      </div>
-		    </div>
-		  </div>
-		</section>
-		<!-- Testimonial -->
-		<section class="text-gray-400 bg-gray-900 body-font">
-		  <div class="container px-5 py-24 mx-auto">
-		    <h1 class="text-3xl font-medium title-font text-white mb-12 text-center">Testimonials</h1>
-		    <div class="flex flex-wrap -m-4">
-		      <div class="p-4 md:w-1/2 w-full">
-		        <div class="h-full bg-gray-800 bg-opacity-40 p-8 rounded">
-		          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="block w-5 h-5 text-gray-500 mb-4" viewBox="0 0 975.036 975.036">
-		            <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
-		          </svg>
-		          <p class="leading-relaxed mb-6">Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90's microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.</p>
-		          <a class="inline-flex items-center">
-		            <img alt="testimonial" src="https://dummyimage.com/106x106" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
-		            <span class="flex-grow flex flex-col pl-4">
-		              <span class="title-font font-medium text-white">Holden Caulfield</span>
-		              <span class="text-gray-500 text-sm">UI DEVELOPER</span>
-		            </span>
-		          </a>
-		        </div>
-		      </div>
-		      <div class="p-4 md:w-1/2 w-full">
-		        <div class="h-full bg-gray-800 bg-opacity-40 p-8 rounded">
-		          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="block w-5 h-5 text-gray-500 mb-4" viewBox="0 0 975.036 975.036">
-		            <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
-		          </svg>
-		          <p class="leading-relaxed mb-6">Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90's microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.</p>
-		          <a class="inline-flex items-center">
-		            <img alt="testimonial" src="https://dummyimage.com/107x107" class="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center">
-		            <span class="flex-grow flex flex-col pl-4">
-		              <span class="title-font font-medium text-white">Alper Kamu</span>
-		              <span class="text-gray-500 text-sm">DESIGNER</span>
-		            </span>
-		          </a>
-		        </div>
-		      </div>
-		    </div>
-		  </div>
-		</section>
-		<!-- Feature -->
-		<section class="text-gray-400 bg-gray-900 body-font">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="flex items-center lg:w-3/5 mx-auto border-b pb-10 mb-10 border-gray-800 sm:flex-row flex-col">
-      <div class="sm:w-32 sm:h-32 h-20 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full text-yellow-400 bg-gray-800 flex-shrink-0">
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="sm:w-16 sm:h-16 w-10 h-10" viewBox="0 0 24 24">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-        </svg>
-      </div>
-      <div class="flex-grow sm:text-left text-center mt-6 sm:mt-0">
-        <h2 class="text-white text-lg title-font font-medium mb-2">Shooting Stars</h2>
-        <p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo juice poutine.</p>
-        <a class="mt-3 text-yellow-400 inline-flex items-center">Learn More
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="flex items-center lg:w-3/5 mx-auto border-b pb-10 mb-10 border-gray-800 sm:flex-row flex-col">
-      <div class="flex-grow sm:text-left text-center mt-6 sm:mt-0">
-        <h2 class="text-white text-lg title-font font-medium mb-2">The Catalyzer</h2>
-        <p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo juice poutine.</p>
-        <a class="mt-3 text-yellow-400 inline-flex items-center">Learn More
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-      <div class="sm:w-32 order-first sm:order-none sm:h-32 h-20 w-20 sm:ml-10 inline-flex items-center justify-center rounded-full text-yellow-400 bg-gray-800 flex-shrink-0">
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="sm:w-16 sm:h-16 w-10 h-10" viewBox="0 0 24 24">
-          <circle cx="6" cy="6" r="3"></circle>
-          <circle cx="6" cy="18" r="3"></circle>
-          <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"></path>
-        </svg>
-      </div>
-    </div>
-    <div class="flex items-center lg:w-3/5 mx-auto sm:flex-row flex-col">
-      <div class="sm:w-32 sm:h-32 h-20 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full text-yellow-400 bg-gray-800 flex-shrink-0">
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="sm:w-16 sm:h-16 w-10 h-10" viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-      </div>
-      <div class="flex-grow sm:text-left text-center mt-6 sm:mt-0">
-        <h2 class="text-white text-lg title-font font-medium mb-2">The 400 Blows</h2>
-        <p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo juice poutine.</p>
-        <a class="mt-3 text-yellow-400 inline-flex items-center">Learn More
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <button class="flex mx-auto mt-20 text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Button</button>
-  </div>
-</section>
-<!-- content -->
-<section class="text-gray-400 body-font bg-gray-900">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="flex flex-wrap w-full mb-20">
-      <div class="lg:w-1/2 w-full mb-6 lg:mb-0">
-        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-white">Pitchfork Kickstarter Taxidermy</h1>
-        <div class="h-1 w-20 bg-yellow-500 rounded"></div>
-      </div>
-      <p class="lg:w-1/2 w-full leading-relaxed text-gray-400 text-opacity-90">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify, subway tile poke farm-to-table. Franzen you probably haven't heard of them man bun deep jianbing selfies heirloom prism food truck ugh squid celiac humblebrag.</p>
-    </div>
-    <div class="flex flex-wrap -m-4">
-      <div class="xl:w-1/4 md:w-1/2 p-4">
-        <div class="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
-          <img class="h-40 rounded w-full object-cover object-center mb-6" src="https://dummyimage.com/720x400" alt="content">
-          <h3 class="tracking-widest text-yellow-400 text-xs font-medium title-font">SUBTITLE</h3>
-          <h2 class="text-lg text-white font-medium title-font mb-4">Chichen Itza</h2>
-          <p class="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon disrupt edison bulbche.</p>
-        </div>
-      </div>
-      <div class="xl:w-1/4 md:w-1/2 p-4">
-        <div class="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
-          <img class="h-40 rounded w-full object-cover object-center mb-6" src="https://dummyimage.com/721x401" alt="content">
-          <h3 class="tracking-widest text-yellow-400 text-xs font-medium title-font">SUBTITLE</h3>
-          <h2 class="text-lg text-white font-medium title-font mb-4">Colosseum Roma</h2>
-          <p class="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon disrupt edison bulbche.</p>
-        </div>
-      </div>
-      <div class="xl:w-1/4 md:w-1/2 p-4">
-        <div class="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
-          <img class="h-40 rounded w-full object-cover object-center mb-6" src="https://dummyimage.com/722x402" alt="content">
-          <h3 class="tracking-widest text-yellow-400 text-xs font-medium title-font">SUBTITLE</h3>
-          <h2 class="text-lg text-white font-medium title-font mb-4">Great Pyramid of Giza</h2>
-          <p class="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon disrupt edison bulbche.</p>
-        </div>
-      </div>
-      <div class="xl:w-1/4 md:w-1/2 p-4">
-        <div class="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
-          <img class="h-40 rounded w-full object-cover object-center mb-6" src="https://dummyimage.com/723x403" alt="content">
-          <h3 class="tracking-widest text-yellow-400 text-xs font-medium title-font">SUBTITLE</h3>
-          <h2 class="text-lg text-white font-medium title-font mb-4">San Francisco</h2>
-          <p class="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon disrupt edison bulbche.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- contact us -->
-<section class="text-gray-400 bg-gray-900 body-font relative">
-  <div class="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
-    <div class="lg:w-2/3 md:w-1/2 bg-gray-900 rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
-      <iframe width="100%" height="100%" title="map" class="absolute inset-0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=%C4%B0zmir+(My%20Business%20Name)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" style="filter: grayscale(1) contrast(1.2) opacity(0.16);"></iframe>
-      <div class="bg-gray-900 relative flex flex-wrap py-6 rounded shadow-md">
-        <div class="lg:w-1/2 px-6">
-          <h2 class="title-font font-semibold text-white tracking-widest text-xs">ADDRESS</h2>
-          <p class="mt-1">Photo booth tattooed prism, portland taiyaki hoodie neutra typewriter</p>
-        </div>
-        <div class="lg:w-1/2 px-6 mt-4 lg:mt-0">
-          <h2 class="title-font font-semibold text-white tracking-widest text-xs">EMAIL</h2>
-          <a class="text-yellow-400 leading-relaxed">example@email.com</a>
-          <h2 class="title-font font-semibold text-white tracking-widest text-xs mt-4">PHONE</h2>
-          <p class="leading-relaxed">123-456-7890</p>
-        </div>
-      </div>
-    </div>
-    <div class="lg:w-1/3 md:w-1/2 flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
-      <h2 class="text-white text-lg mb-1 font-medium title-font">Feedback</h2>
-      <p class="leading-relaxed mb-5">Post-ironic portland shabby chic echo park, banjo fashion axe</p>
-      <div class="relative mb-4">
-        <label for="name" class="leading-7 text-sm text-gray-400">Name</label>
-        <input type="text" id="name" name="name" class="w-full bg-gray-800 rounded border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-      </div>
-      <div class="relative mb-4">
-        <label for="email" class="leading-7 text-sm text-gray-400">Email</label>
-        <input type="email" id="email" name="email" class="w-full bg-gray-800 rounded border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-      </div>
-      <div class="relative mb-4">
-        <label for="message" class="leading-7 text-sm text-gray-400">Message</label>
-        <textarea id="message" name="message" class="w-full bg-gray-800 rounded border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-      </div>
-      <button class="text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded text-lg">Button</button>
-      <p class="text-xs text-gray-400 text-opacity-90 mt-3">Chicharrones blog helvetica normcore iceland tousled brook viral artisan.</p>
-    </div>
-  </div>
-</section>
-<!-- footer -->
-<footer class="text-gray-400 bg-gray-900 body-font">
-  <div class="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
-    <div class="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-      <a class="flex title-font font-medium items-center md:justify-start justify-center text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-yellow-500 rounded-full" viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-        </svg>
-        <span class="ml-3 text-xl">Tailblocks</span>
-      </a>
-      <p class="mt-2 text-sm text-gray-500">Air plant banjo lyft occupy retro adaptogen indego</p>
-    </div>
-    <div class="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
-      <div class="lg:w-1/4 md:w-1/2 w-full px-4">
-        <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">CATEGORIES</h2>
-        <nav class="list-none mb-10">
-          <li>
-            <a class="text-gray-400 hover:text-white">First Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Second Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Third Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Fourth Link</a>
-          </li>
-        </nav>
-      </div>
-      <div class="lg:w-1/4 md:w-1/2 w-full px-4">
-        <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">CATEGORIES</h2>
-        <nav class="list-none mb-10">
-          <li>
-            <a class="text-gray-400 hover:text-white">First Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Second Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Third Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Fourth Link</a>
-          </li>
-        </nav>
-      </div>
-      <div class="lg:w-1/4 md:w-1/2 w-full px-4">
-        <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">CATEGORIES</h2>
-        <nav class="list-none mb-10">
-          <li>
-            <a class="text-gray-400 hover:text-white">First Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Second Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Third Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Fourth Link</a>
-          </li>
-        </nav>
-      </div>
-      <div class="lg:w-1/4 md:w-1/2 w-full px-4">
-        <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">CATEGORIES</h2>
-        <nav class="list-none mb-10">
-          <li>
-            <a class="text-gray-400 hover:text-white">First Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Second Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Third Link</a>
-          </li>
-          <li>
-            <a class="text-gray-400 hover:text-white">Fourth Link</a>
-          </li>
-        </nav>
-      </div>
-    </div>
-  </div>
-  <div class="bg-gray-800 bg-opacity-75">
-    <div class="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-      <p class="text-gray-400 text-sm text-center sm:text-left">© 2020 Tailblocks —
-        <a href="https://twitter.com/knyttneve" rel="noopener noreferrer" class="text-gray-500 ml-1" target="_blank">@knyttneve</a>
-      </p>
-      <span class="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
-        <a class="text-gray-400">
-          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-400">
-          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-400">
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-400">
-          <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
-            <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
-            <circle cx="4" cy="4" r="2" stroke="none"></circle>
-          </svg>
-        </a>
-      </span>
-    </div>
-  </div>
-</footer>
+    <h1>Hello World!</h1>
 </body>
+</html>`;
+cssCode.value = `h1 {
+    color: red;
+}`;
+
+jsCode.value = `
+    // Change Your Ideas into Code.
+`;
+
+
+
+
+Run.addEventListener("click", function RunCode() {
+    output_container.style.display = "flex";
+    output.contentDocument.body.innerHTML = HTMLCode.value + "<style>" + cssCode.value + "</style>";
+    output.contentWindow.eval(jsCode.value);
+});
+
+
+Close.addEventListener("click", function Close() {
+    output_container.style.display = "none";
+
+});
+
+
+
+
+// const setFile = document.querySelector("[setFile]");
+// setFile
+
+
+
+
+// HTMLCode.value ="HEllo"
+
+// function createHTMLFile() {
+//     const blob = new Blob([HTMLCode.value], { type: 'text/html' });
+//     const link = document.createElement('a');
+//     link.href = URL.createObjectURL(blob);
+//     link.download = 'output.html';
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+// }
+
+
+
+// createHTMLFile()
+
+
+// script.js
+// jsCode.value = "var a;"
+
+// function saveJsCode() {
+
+//     const blob = new Blob([jsCode.value], { type: 'application/javascript' });
+//     const link = document.createElement('a');
+//     link.href = URL.createObjectURL(blob);
+//     link.download = 'script.js';
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+// }
+
+// saveJsCode()
+
+
+
+// script.js
+// function saveCssCode() {
+//     const blob = new Blob([cssCode.value], { type: 'text/css' });
+//     const link = document.createElement('a');
+
+//     // Set the link's attributes
+//     link.href = URL.createObjectURL(blob);
+//     link.download = 'styles.css';
+
+//     // Append the link to the body
+//     document.body.appendChild(link);
+
+//     // Trigger a click on the link to start the download
+//     link.click();
+
+//     // Remove the link from the DOM
+//     document.body.removeChild(link);
+// }
+
+
+
+
+
+var SelectAll = document.querySelector("[allSelect]");
+var UnselectAll = document.querySelector("[allUnselect]");
+SelectAll.addEventListener("click", () => {
+    let activated = document.querySelector(".active_file");
+    activated.querySelector("textarea").select();
+});
+UnselectAll.addEventListener("click", () => {
+    let activated = document.querySelector(".active_file");
+    activated.querySelector("textarea").setSelectionRange(0, 0);
+});
+
+
+
+var IncreaseFont = document.querySelector("[increaseFont]");
+var DecreaseFont = document.querySelector("[decreaseFont]");
+
+IncreaseFont.addEventListener("click", () => {
+    let activated = document.querySelector(".active_file").querySelector("textarea");
+    let property = window.getComputedStyle(activated);
+    let val = property.getPropertyValue("font-size");
+    val = parseInt(val);
+    if (val < 31) {
+        val += 1;
+        activated.style.fontSize = val + "px";
+    }
+});
+
+DecreaseFont.addEventListener("click", () => {
+    let activated = document.querySelector(".active_file").querySelector("textarea");
+    let property = window.getComputedStyle(activated);
+    let val = property.getPropertyValue("font-size");
+    val = parseInt(val);
+    if (val > 22) {
+        val -= 1;
+        activated.style.fontSize = val + "px";
+    }
+});
+
+
+
+let save = document.querySelector("[save]");
+save.addEventListener("click", () => {
+    let areas = document.querySelectorAll("textarea");
+    let arr = [];
+    areas.forEach(e => {
+        let val = e.value;
+        arr.push(val);
+        localStorage.setItem('Value', JSON.stringify(arr));
+        console.log(localStorage);
+    })
+});
+
+
+
+document.addEventListener("keydown", (e) => {
+    if (e.keyCode == 27) {
+        output_container.style.display = "none";
+        console.log("CLick");
+    }
+})
+
+
+document.querySelector("[run]").onclick = () => { document.querySelector(".button-run").click() };
+document.querySelectorAll(".disable").forEach(e => e.addEventListener("mouseenter", () => e.setAttribute("title", "Please Upgrade to Pro To Use This Feature")))
+
+
+var disable = document.querySelectorAll(".disable");
+disable.forEach(e => {
+    e.addEventListener("click", () => {
+        var alerts = document.querySelector(".active_editor");
+        alerts.style = "top: 0% !important;"
+        console.log("hello");
+    })
+})
+
+
+
+var layouts = document.querySelectorAll(".layout");
+var layout = document.querySelectorAll("[layout]");
+let attr;
+layout.forEach(e => {
+    e.addEventListener("click", tar => {
+        attr = document.querySelector(tar.currentTarget.getAttribute("layout"));
+        attr.style = "opacity: 1; z-index: 1500;";
+    })
+});
+
+var closes = document.querySelectorAll(".cancel");
+closes.forEach(e => {
+    e.addEventListener("click", () => {
+        attr.style = "opacity: 0; z-index: -1;";
+    })
+});
+
+
+
+var doc = document.querySelector("[doc]");
+doc.addEventListener("click", ()=>{
+    window.open("./docs.html","_blank");
+})
+
+var ok = document.querySelector("[ok]");
+ok.addEventListener("click", ()=>{
+    ok.parentElement.style.top = "-20%";
+});
+
+
+    </script>
+
+
+</body>
+
 </html>
